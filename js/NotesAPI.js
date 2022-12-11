@@ -39,14 +39,60 @@ export default class NotesAPI {
         if (copyBody) {
             copyBody.body = noteToShare.body;
         }
-
-        // copyBody = newNote.body;
-        console.log(copyBody);
     }
 
     static settingsNote() {
-        
-    }
+      const openModalButtons = document.querySelectorAll('[data-modal-target]')
+        const closeModalButtons = document.querySelectorAll('[data-close-button]')
+        const overlay = document.getElementById('overlay')
+
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              const modal = document.querySelector(button.dataset.modalTarget)
+              openModal(modal)
+            })
+          })
+          
+          overlay.addEventListener('click', () => {
+            const modals = document.querySelectorAll('.settingsmodal.active')
+            modals.forEach(modal => {
+              closeModal(modal)
+            })
+          })
+          
+          closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+              const modal = button.closest('.settingsmodal')
+              closeModal(modal)
+            })
+          })
+          
+          function openModal(modal) {
+            if (modal == null) return
+            modal.classList.add('active')
+            overlay.classList.add('active')
+          }
+          
+          function closeModal(modal) {
+            if (modal == null) return
+            modal.classList.remove('active')
+            overlay.classList.remove('active')
+          }
+       
+      }
+
+      static darkModeToggle(){
+        var body = document.body;
+
+        if (body.classList.contains("dark-mode")) {
+          // If the body element has the "dark-mode" class, remove it
+          body.classList.remove("dark-mode");
+        } else {
+          // If the body element does not have the "dark-mode" class, add it
+          body.classList.add("dark-mode");
+        }
+      }
+    
     
     static infoNote() {
         const openModalButtons = document.querySelectorAll('[data-modal-target]')
@@ -61,7 +107,7 @@ export default class NotesAPI {
           })
           
           overlay.addEventListener('click', () => {
-            const modals = document.querySelectorAll('.modal.active')
+            const modals = document.querySelectorAll('.infomodal.active')
             modals.forEach(modal => {
               closeModal(modal)
             })
@@ -69,7 +115,7 @@ export default class NotesAPI {
           
           closeModalButtons.forEach(button => {
             button.addEventListener('click', () => {
-              const modal = button.closest('.modal')
+              const modal = button.closest('.infomodal')
               closeModal(modal)
             })
           })
@@ -86,43 +132,4 @@ export default class NotesAPI {
             overlay.classList.remove('active')
           }
     }
-
-    // static noteModal() {
-    //     const openModalButtons = document.querySelectorAll('[data-modal-target]')
-    //     const closeModalButtons = document.querySelectorAll('[data-close-button]')
-    //     const overlay = document.getElementById('overlay')
-
-    //     openModalButtons.forEach(button => {
-    //         button.addEventListener('click', () => {
-    //           const modal = document.querySelector(button.dataset.modalTarget)
-    //           openModal(modal)
-    //         })
-    //       })
-          
-    //       overlay.addEventListener('click', () => {
-    //         const modals = document.querySelectorAll('.modal.active')
-    //         modals.forEach(modal => {
-    //           closeModal(modal)
-    //         })
-    //       })
-          
-    //       closeModalButtons.forEach(button => {
-    //         button.addEventListener('click', () => {
-    //           const modal = button.closest('.modal')
-    //           closeModal(modal)
-    //         })
-    //       })
-          
-    //       function openModal(modal) {
-    //         if (modal == null) return
-    //         modal.classList.add('active')
-    //         overlay.classList.add('active')
-    //       }
-          
-    //       function closeModal(modal) {
-    //         if (modal == null) return
-    //         modal.classList.remove('active')
-    //         overlay.classList.remove('active')
-    //       }
-    // }
 }

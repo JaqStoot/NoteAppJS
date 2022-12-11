@@ -10,10 +10,6 @@ export default class App {
         this._refreshNotes();
     }
 
-    buttons(root){
-        
-    }
-
     _refreshNotes() {
         const notes = NotesAPI.getAllNotes();
 
@@ -44,7 +40,7 @@ export default class App {
             onNoteAdd: () => {
                 const newNote = {
                     title: "New Note",
-                    body: "Take note..."
+                    body: "New Text Here..."
                 };
 
                 NotesAPI.saveNote(newNote);
@@ -63,11 +59,14 @@ export default class App {
                 NotesAPI.deleteNote(noteId);
                 this._refreshNotes();
             },
-            onNoteInfo: noteId => {
+            onNoteInfo: () => {
                 NotesAPI.infoNote();
             },
-            onNoteSettings: noteId => {
+            onNoteSettings: () => {
                 NotesAPI.settingsNote();
+            },
+            onDarkModeToggle: () => {
+                NotesAPI.darkModeToggle();
             },
         };
     }

@@ -1,5 +1,5 @@
 export default class NotesView {
-    constructor(root, { onNoteSelect, onNoteAdd, onNoteEdit, onNoteDelete, onNoteInfo, onNoteSettings, onNoteShare } = {}) {
+    constructor(root, { onNoteSelect, onNoteAdd, onNoteEdit, onNoteDelete, onNoteInfo, onNoteSettings, onNoteShare, onDarkModeToggle } = {}) {
         this.root = root;
         this.onNoteSelect = onNoteSelect;
         this.onNoteAdd = onNoteAdd;
@@ -8,60 +8,78 @@ export default class NotesView {
         this.onNoteInfo = onNoteInfo;
         this.onNoteSettings = onNoteSettings;
         this.onNoteShare = onNoteShare;
+        this.onDarkModeToggle = onDarkModeToggle;
         this.root.innerHTML = `
             <div class="notes__sidebar">
                 <button class="notes__add" type="button">Add Note</button>
                 <div class="notes__list"></div>
                 <div class="notes__sidebar_footer">
                     <div class="btn-group">
-                        <button class="notes__settings" style="width:33.3%" type="button">Settings</button>
+                        <button class="notes__settings" data-modal-target="#modal2" style="width:33.3%" type="button">Settings</button>
                         <button class="notes__share" style="width:33.3%" type="button">Share</button>
-                        <button class="notes__info" data-modal-target="#modal" style="width:33.3%" type="button">Info</button>
-                        <div class="modal" id="modal">
-                        <div class="modal-header">
-                          <div class="title">Example Modal</div>
-                          <button data-close-button class="close-button">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                          <p>Thank you for using my app! My name is Jack Stout, and this app was designed and created for my Software Engineering class at Southeast Missouri State University. It's still in progress, but I hope you like what's here!</p>
-                          <break>
-                          <p>Double-click a note to delete it!</p>
-                        </div>
-                      </div>
-                      <div id="overlay"></div>
-                    </div> 
+                        <button class="notes__info" data-modal-target="#modal1" style="width:33.3%" type="button">Info</button>
+                    </div>
                 </div>
+                <div class="infomodal" id="modal1">
+                    <div class="infomodal-header">
+                        <div class="title">Information</div>
+                        <button data-close-button class="close-button">&times;</button>
+                    </div>
+                    <div class="infomodal-body">
+                        <p>Thank you for using my app! My name is Jack Stout and I am a member of Group 8, also consisting of Cole Schemel, Hannah Battreal, and Landon Middleton, and this app was designed and created for our Software Engineering class at Southeast Missouri State University. It's still in progress, but I hope you like what's here!</p>
+                        <break>
+                        <p>Double-click a note to delete it!</p>
+                    </div>
+                </div>
+                <div id="overlay"></div>
+                </div>
+                <div class="settingsmodal" id="modal2">
+                    <div class="settingsmodal-header">
+                        <div class="title">Settings</div>
+                        <button data-close-button class="close-button">&times;</button>
+                    </div>
+                    <div class="settingsmodal-body">
+                        <p>This is the settings modal menu!</p>
+                        <break>
+                        <button id="toggle-dark-mode-button" class="toggle-dark-mode-button">Dark Mode</button>
+                    </div>
+                    <div id="overlay"></div>
+                </div>
+
             </div>
             <div class="notes__preview">
                 <input class="notes__title" type="text" placeholder="New Note...">
-                <textarea class="notes__body">Take Note...</textarea>
+                <textarea class="notes__body">New Text Here...</textarea>
                 <div id="alrt" class="alrt"></div>
             </div>
             
         `;
-        
+
 
         const btnAddNote = this.root.querySelector(".notes__add");
         const btnInfoNote = this.root.querySelector(".notes__info");
         const btnSettingsNote = this.root.querySelector(".notes__settings");
         const btnShareNote = this.root.querySelector(".notes__share");
+        const btnDarkModeToggle = this.root.querySelector(".toggle-dark-mode-button")
         const inpTitle = this.root.querySelector(".notes__title");
         const inpBody = this.root.querySelector(".notes__body");
-    
+
         btnAddNote.addEventListener("click", () => {
             this.onNoteAdd();
         });
 
         btnInfoNote.addEventListener("click", () => {
             this.onNoteInfo();
-            console.log("info button lol");
         });
 
         btnSettingsNote.addEventListener("click", () => {
             this.onNoteSettings();
-            console.log("settings button lol");
         });
 
+        btnDarkModeToggle.addEventListener("click", () => {
+            this.onDarkModeToggle();
+        });
+        
         [inpTitle, inpBody].forEach(inputField => {
             inputField.addEventListener("blur", () => {
                 const updatedTitle = inpTitle.value.trim();
@@ -77,13 +95,13 @@ export default class NotesView {
             document.execCommand('copy');
             //alert("Note has been copied!");
 
-            document.getElementById('alrt').innerHTML='<b>Note Copied!</b>'; 
-            setTimeout(function() {document.getElementById('alrt').innerHTML='';},2000);
+            document.getElementById('alrt').innerHTML = '<b>Note Copied!</b>';
+            setTimeout(function () { document.getElementById('alrt').innerHTML = ''; }, 2000);
         }
 
         this.updateNotePreviewVisibility(false);
 
-        
+
     }
 
     _createListItemHTML(id, title, body, updated) {
@@ -120,10 +138,9 @@ export default class NotesView {
         notesListContainer.querySelectorAll(".notes__list-item").forEach(noteListItem => {
             noteListItem.addEventListener("click", () => {
                 this.onNoteSelect(noteListItem.dataset.noteId);
-                console.log(noteListItem.dataset.noteId);
                 noteID = noteListItem.dataset.noteId;
             });
-            
+
             noteListItem.addEventListener("dblclick", () => {
                 const doDelete = confirm("Are you sure you want to delete this note?");
 
